@@ -14,7 +14,10 @@ namespace Poker
 			Card[] hand = GetHand(args);
 			// Sort the array of cards to make hand-checking easier for each of the checking helper functions.
 			Array.Sort(hand);
-
+			foreach (var c in hand)
+			{
+				Console.WriteLine(c.rank);
+			}
 			// Check whether the hand is a straight flush, write to the console
 			if (IsFlush(hand) && IsStraight(hand))
 			{
@@ -23,17 +26,17 @@ namespace Poker
 			// Check whether the hand is a flush, write to the console
 			else if (IsFlush(hand))
 			{
-					Console.WriteLine("You have a flush!");
+				Console.WriteLine("You have a flush!");
 			}
 			// Check whether the hand is a straight, write to the console
 			else if (IsStraight(hand))
 			{
-					Console.WriteLine("You have a straight!");
+				Console.WriteLine("You have a straight!");
 			}
 			// Check whether the hand is a full house, write to the console
 			else if (IsFullHouse(hand))
 			{
-					Console.WriteLine("You have a full house!");
+				Console.WriteLine("You have a full house!");
 			}
 			// Check whether the hand has four of a kind, write to the console
 			else if (IsFourOfAKind(hand))
@@ -43,17 +46,17 @@ namespace Poker
 			// Check whether the hand has three of a kind, write to the console
 			else if (IsThreeOfAKind(hand))
 			{
-					Console.WriteLine("You have three of a kind!");
+				Console.WriteLine("You have three of a kind!");
 			}
 			// Check whether the hand has two pairs, write to the console
 			else if (IsTwoPairs(hand))
 			{
-					Console.WriteLine("You have two pairs!");
+				Console.WriteLine("You have two pairs!");
 			}
 			// Check whether the hand has a pair, write to the console
 			else if (IsPair(hand))
 			{
-					Console.WriteLine("You have a pair!");
+				Console.WriteLine("You have a pair!");
 			}
 			// Determine the high card, write to the console
 			else
@@ -110,9 +113,9 @@ namespace Poker
     // Check to see whether all cards are consecutively numbered
     static bool IsStraight(Card[] hand)
     {
-      for (int i = 1; i < hand.Length -1; i++)
+      for (int i = 1; i < hand.Length - 1; i++)
       {
-        if (hand[i + 1].rank - hand[i].rank > 1)
+        if (hand[i + 1].rank - hand[i].rank != 1)
         {
           return false;
         }
@@ -130,10 +133,9 @@ namespace Poker
 				if (hand[i].rank - hand[i - 1].rank == 0)
 				{
 					counter += 1;
-					Console.WriteLine(counter);
 				}
 			}
-			// check the number of duplications that exist
+			// check the number of duplications that exist and return true if it's a single duplication
 			if (counter == 1)
 			{
 				return true;
@@ -145,13 +147,14 @@ namespace Poker
 		static bool IsThreeOfAKind(Card[] hand)
 		{
 			int counter = 0;
+			int dupRank = 0;
 			// cycle through and count the number of duplications
 			for (int i = 1; i < hand.Length; i++)
 			{
 				if (hand[i].rank - hand[i - 1].rank == 0)
 				{
 					counter += 1;
-					Console.WriteLine(counter);
+					dupRank = i;
 				}
 			}
 			// check the number of duplications that exist
@@ -172,7 +175,6 @@ namespace Poker
 				if (hand[i].rank - hand[i - 1].rank == 0)
 				{
 					counter += 1;
-					Console.WriteLine(counter);
 				}
 			}
 			// check the number of duplications that exist
