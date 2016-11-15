@@ -8,12 +8,45 @@ namespace Poker
   {
     static void Main(string[] args)
     {
-      Card[] hand = GetHand(args);
-      Array.Sort(hand);
-      Console.WriteLine("In Main");
-      Console.ReadLine();
+			Card[] hand = GetHand(args);
+			Array.Sort(hand);
+			if (IsFlush(hand) && IsStraight(hand))
+			{
+				Console.WriteLine("You have a straight flush!");
+			}
+			else if (IsFlush(hand))
+			{
+					Console.WriteLine("You have a flush!");
+			}
+			else if (IsStraight(hand))
+			{
+					Console.WriteLine("You have a straight!");
+			}
+			else if (IsFullHouse(hand))
+			{
+					Console.WriteLine("You have a full house!");
+			}
+			else if (IsThreeOfAKind(hand))
+			{
+					Console.WriteLine("You have three of a kind!");
+			}
+			else if (IsFourOfAKind(hand))
+			{
+					Console.WriteLine("You have four of a kind!");
+			}
+			else if (IsTwoPairs(hand))
+			{
+					Console.WriteLine("You have two pairs!");
+			}
+			else if (IsPair(hand))
+			{
+					Console.WriteLine("You have a pair!");
+			}
+
+			Console.ReadLine();
     }
 
+		// get a hand of 5 cards; assign values to suit and rank
     static Card[] GetHand(string[] args)
     {
       Card[] hand = new Card[5];
@@ -21,16 +54,10 @@ namespace Poker
 
       foreach (string a in args)
       {
-        if (index > 4)
-        {
-          break;
-          Card c = new Poker.Card(a);
-          hand[index++] = c;
-        }
-
         while (index < 5)
         {
-          hand[index++] = Deal();
+					Card c = new Card(a);
+					index++;
         }
       }
       return hand;
@@ -53,7 +80,7 @@ namespace Poker
     }
 
     // Check to see whether all cards are of the same suit
-    public bool IsFlush(Card[] hand)
+    static bool IsFlush(Card[] hand)
     {
       for (int i = 1; i < hand.Length; i++)
       {
@@ -66,9 +93,9 @@ namespace Poker
     }
 
     // Check to see whether all cards are consecutively numbered
-    public bool IsStraight(Card[] hand)
+    static bool IsStraight(Card[] hand)
     {
-      for (int i = 1; i < hand.Length; i++)
+      for (int i = 1; i < hand.Length -1; i++)
       {
         if (hand[i + 1].rank - hand[i].rank > 1)
         {
@@ -79,7 +106,7 @@ namespace Poker
     }
 
     // Check to see whether 2 (and only 2) duplications of a card number exists
-    public bool IsPair(Card[] hand)
+    static bool IsPair(Card[] hand)
     {
       for (int i = 1; i < hand.Length; i++)
       {
@@ -92,7 +119,7 @@ namespace Poker
     }
 
     // Check to see whether 4 (and only 4) duplications of a card number exists
-    public bool IsTwoPair(Card[] hand)
+    static bool IsFourOfAKind(Card[] hand)
     {
       int counter = 0;
       for (int i = 1; i < hand.Length; i++)
@@ -109,8 +136,40 @@ namespace Poker
       return false;
     }
 
-    // Check to see whether three (and only) cards with the same number exists
-    public bool IsThreeOfAKind(Card[] hand)
+		// Check to see whether 2 duplications of 2 different card numbers exist
+		static bool IsTwoPairs(Card[] hand)
+		{
+			int counterPair1 = 0;
+			int counterPair2 = 0;
+			int tracker = 0;
+			bool result = false;
+			for (int i = 1; i < hand.Length; i++)
+			{
+				if (hand[i].rank == hand[i + 1].rank && hand[i].rank != tracker)
+				{
+					counterPair1 += counterPair1;
+					tracker = hand[i].rank;
+				}
+				if (counterPair1 == 2)
+				{
+						result = true;
+				}
+				if (hand[i].rank == hand[i + 1].rank && hand[i].rank != tracker)
+				{
+					counterPair2 += counterPair2;
+					tracker = hand[i].rank;
+				}
+				if (counterPair2 == 2 && result == true)
+				{
+					return true;
+				}
+
+			}
+			return false;
+		}
+
+		// Check to see whether three (and only) cards with the same number exists
+		static bool IsThreeOfAKind(Card[] hand)
     {
       int counter = 0;
       for (int i = 1; i < hand.Length; i++)
@@ -129,7 +188,7 @@ namespace Poker
     }
 
     // Check to see whether both a duplication of two card numbers plus three of a card number exists
-    public bool IsFullHouse(Card[] hand)
+    static bool IsFullHouse(Card[] hand)
     {
       if (IsThreeOfAKind(hand) && IsPair(hand))
       {

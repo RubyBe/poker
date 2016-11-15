@@ -9,7 +9,7 @@ namespace Poker
 
     public Card()
     {
-
+        
     }
 
     public Card(string str)
@@ -49,9 +49,15 @@ namespace Poker
             break;
         }
       }
+			Console.WriteLine("rank: " + rank + "suit: " + suit);
       if (rank == 0)
       {
         Console.WriteLine("Enter a rank: " + str);
+      }
+
+      if (suit == 0)
+      {
+          Console.WriteLine("Enter a suit: " + str);
       }
     }
 

@@ -4,3 +4,9 @@ C:\Projects\Poker\Poker\bin\Debug\Poker.pdb
 C:\Projects\Poker\Poker\obj\Debug\Poker.csprojResolveAssemblyReference.cache
 C:\Projects\Poker\Poker\obj\Debug\Poker.exe
 C:\Projects\Poker\Poker\obj\Debug\Poker.pdb
+C:\repos\poker\Poker\bin\Debug\Poker.exe.config
+C:\repos\poker\Poker\obj\Debug\Poker.exe
+C:\repos\poker\Poker\obj\Debug\Poker.pdb
+C:\repos\poker\Poker\bin\Debug\Poker.exe
+C:\repos\poker\Poker\bin\Debug\Poker.pdb
+C:\repos\poker\Poker\obj\Debug\Poker.csprojResolveAssemblyReference.cache
