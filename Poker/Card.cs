@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 namespace Poker
 {
   class Card : IComparable
@@ -49,6 +50,7 @@ namespace Poker
             break;
         }
       }
+
 			Console.WriteLine("rank: " + rank + "suit: " + suit);
       if (rank == 0)
       {
