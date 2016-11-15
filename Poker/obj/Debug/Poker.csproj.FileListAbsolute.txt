@@ -1,0 +1,6 @@
+C:\Projects\Poker\Poker\bin\Debug\Poker.exe.config
+C:\Projects\Poker\Poker\bin\Debug\Poker.exe
+C:\Projects\Poker\Poker\bin\Debug\Poker.pdb
+C:\Projects\Poker\Poker\obj\Debug\Poker.csprojResolveAssemblyReference.cache
+C:\Projects\Poker\Poker\obj\Debug\Poker.exe
+C:\Projects\Poker\Poker\obj\Debug\Poker.pdb
