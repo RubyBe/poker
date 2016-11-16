@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Poker
 {
@@ -10,14 +8,30 @@ namespace Poker
   {
     static void Main(string[] args)
     {
-			// Declare an array of cards and then call a function to fill the array with instances of cards
+			Card[] deck = new Card[52];
+			deck = GetDeck();
+			foreach(var card in deck)
+			{
+				Console.WriteLine("Card: " + card.suit + card.rank);
+			}
+
+			Card[] dealedHand = DealHand(deck);
+			foreach(var card in dealedHand)
+			{
+				Console.WriteLine("Hand: " + card.suit + card.rank);
+			}
+
+			// Methods to Create decks and hands (will move to game class later)
+
+			//-------------------------------------------------------------------------
+			// Declare an array of cards and then call a function to fill the array with instances of cards - this section is for testing
 			Card[] hand = GetHand(args);
 			// Sort the array of cards to make hand-checking easier for each of the checking helper functions.
 			Array.Sort(hand);
-			foreach (var c in hand)
-			{
-				Console.WriteLine(c.rank);
-			}
+
+
+			//-------------------------------------------------------------------------
+			// Check for each type of hand by calling appropriate methods and then writing result to the console
 			// Check whether the hand is a straight flush, write to the console
 			if (IsFlush(hand) && IsStraight(hand))
 			{
@@ -58,16 +72,39 @@ namespace Poker
 			{
 				Console.WriteLine("You have a pair!");
 			}
-			// Determine the high card, write to the console
 			else
 			{
-				Console.WriteLine("Your high card is: ");
+				// Determine the high card, write to the console
+				int highCard = GetHighCard(hand);
+				Console.WriteLine("Your high card is: " + highCard);
+				Console.ReadLine();
 			}
-			Console.ReadLine();
     }
 
-		// get a hand of 5 cards; assign values to suit and rank
-    static Card[] GetHand(string[] args)
+		//-------------------------------------------------------------------------
+		// Methods to generate decks and hands of cards
+		// generate a random deck of cards
+		static Card[] GetDeck()
+		{
+			Card[] deck = new Card[52];
+			char[] suitList = new char[] { 'C', 'D', 'H', 'S' };
+			int k = 0;
+			for(int i = 0; i < 4; i++)
+			{
+				for (int j = 2; j < 15; j++)
+				{
+					Card c = new Card();
+					c.rank = j;
+					c.suit = suitList[i];
+					deck[k] = c;
+					k++;
+				}
+			}
+			return deck;
+		}
+			
+		// get a hand of 5 cards from system args for testing
+		static Card[] GetHand(string[] args)
     {
       Card[] hand = new Card[5];
       int index = 0;
@@ -81,24 +118,29 @@ namespace Poker
       return hand;
     }
 
-    static List<Card> deck = null;
-    static int dealIndex = 0;
+		// have the game create a hand of 5 cards for playing
+		static int dealIndex = 0;
 
-    static Card Deal()
-    {
-      if (deck == null || dealIndex >= 52) // ran out of cards
-      {
-        // fill and randomize the list of cards here
-      }
+		static Card[] DealHand(Card[] deck)
+		{
+			Card[] hand = new Card[5];
+			if (deck == null || dealIndex >= 52) // ran out of cards
+			{
+				deck = GetDeck();
+			}
+			for(int i = 0; i < 5; i++)
+			{
+				hand[i] = deck[dealIndex];
+				dealIndex++;
+			}
+			// Card nextCard = new Card(); -- use this later for replenishing?
+			return hand;
+		}
 
-      Card nextCard = new Poker.Card();
-      return nextCard;
-      // return deck[dealIndex++];
-
-    }
-
-    // Check to see whether all cards are of the same suit
-    static bool IsFlush(Card[] hand)
+		//-------------------------------------------------------------------------
+		// Helper functions to determine the composition of each hand (will move to a classification class later)
+		// Check to see whether all cards are of the same suit
+		static bool IsFlush(Card[] hand)
     {
       for (int i = 1; i < hand.Length; i++)
       {
@@ -115,7 +157,7 @@ namespace Poker
     {
       for (int i = 1; i < hand.Length - 1; i++)
       {
-        if (hand[i + 1].rank - hand[i].rank != 1)
+        if (hand[i].rank - hand[i - 1].rank != 1)
         {
           return false;
         }
@@ -123,8 +165,55 @@ namespace Poker
       return true;
     }
 
-    // Check to see two (and only two) cards with the same number exist
-    static bool IsPair(Card[] hand)
+		// Check to see whether both a duplication of two card numbers plus three of a card number exists
+		static bool IsFullHouse(Card[] hand)
+		{
+			// set up separate counters to track each set
+			int counterPair = 0;
+			int counterTrio = 0;
+			// set up a tracker to differentiate between pairs, and two bools to flag when each set count has been reached
+			int tracker = 0;
+			bool resultPair = false;
+			bool resultTrio = false;
+			// look for a pair, and if found, fill the tracker with the rank
+			for (int i = 1; i < hand.Length - 1; i++)
+			{
+				if (hand[i].rank == hand[i - 1].rank)
+				{
+					counterPair += 1;
+					tracker = hand[i].rank;
+				}
+			}
+			// if a pair was found, set the pair result to true
+			if (counterPair == 1)
+			{
+				resultPair = true;
+			}
+			// look for a trio
+			for (int i = 1; i < hand.Length - 1; i++)
+			{
+				// check for three duplications of a type other than in the pair
+				if (hand[i].rank == hand[i - 1].rank && hand[i].rank != tracker)
+				{
+					counterTrio += 1;
+					tracker = hand[i].rank;
+				}
+			}
+			// if a trio was found, set the trio result to true
+			if (counterTrio == 2)
+			{
+				resultTrio = true;
+			}
+			// if both pair and trio results are true, we have full house, so return true
+			if (resultPair && resultTrio)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		// Check to see two (and only two) cards with the same number exist
+		static bool IsPair(Card[] hand)
     {
 			int counter = 0;
 			// cycle through and count the number of duplications
@@ -147,14 +236,14 @@ namespace Poker
 		static bool IsThreeOfAKind(Card[] hand)
 		{
 			int counter = 0;
-			int dupRank = 0;
+			int dupTracker = 0;
 			// cycle through and count the number of duplications
 			for (int i = 1; i < hand.Length; i++)
 			{
-				if (hand[i].rank - hand[i - 1].rank == 0)
+				if (hand[i].rank - hand[dupTracker].rank == 0)
 				{
+					dupTracker = i;
 					counter += 1;
-					dupRank = i;
 				}
 			}
 			// check the number of duplications that exist
@@ -165,16 +254,18 @@ namespace Poker
 			return false;
 		}
 
-		// Check to see whether 4 (and only 4) duplications of a card number exists
+		// Check to see whether 4 (and only 4) duplications of a single card number exists
 		static bool IsFourOfAKind(Card[] hand)
     {
 			int counter = 0;
+			int dupTracker = 0;
 			// cycle through and count the number of duplications
 			for (int i = 1; i < hand.Length; i++)
 			{
-				if (hand[i].rank - hand[i - 1].rank == 0)
+				if (hand[i].rank - hand[dupTracker].rank == 0)
 				{
 					counter += 1;
+					dupTracker = i;
 				}
 			}
 			// check the number of duplications that exist
@@ -188,44 +279,50 @@ namespace Poker
 		// Check to see whether 2 duplications of 2 different card numbers exist
 		static bool IsTwoPairs(Card[] hand)
 		{
+			// set up separate counters to track each pair
 			int counterPair1 = 0;
 			int counterPair2 = 0;
+			// set up a tracker to differentiate between pairs, and two bools to flag when each pair count has been reached
 			int tracker = 0;
-			bool result = false;
+			bool result1 = false;
+			bool result2 = false;
 			for (int i = 1; i < hand.Length - 1; i++)
 			{
-				if (hand[i].rank == hand[i + 1].rank && hand[i].rank != tracker)
+				if (hand[i].rank == hand[i - 1].rank)
 				{
-					counterPair1 += counterPair1;
+					counterPair1 += 1;
 					tracker = hand[i].rank;
 				}
-				if (counterPair1 == 2)
+				if (counterPair1 == 1)
 				{
-						result = true;
+					result1 = true;
 				}
-				if (hand[i].rank == hand[i + 1].rank && hand[i].rank != tracker)
+			}
+			for (int i = 1; i < hand.Length -1; i++)
+			{
+				if (hand[i].rank == hand[i - 1].rank && hand[i].rank != tracker)
 				{
-					counterPair2 += counterPair2;
+					counterPair2 += 1;
 					tracker = hand[i].rank;
 				}
-				if (counterPair2 == 2 && result == true)
+				if (counterPair2 == 1)
 				{
-					return true;
+					result2 = true;
 				}
-
+			}
+			if (result1 && result2)
+			{
+				return true;
 			}
 			return false;
 		}
-
-    // Check to see whether both a duplication of two card numbers plus three of a card number exists
-    static bool IsFullHouse(Card[] hand)
-    {
-      if (IsThreeOfAKind(hand) && IsPair(hand))
-      {
-        return true;
-      }
-      return false;
-    }
+		// if no better hand, then get the high card in the hand
+		static int GetHighCard(Card[] hand)
+		{
+			// TODO
+			int highCard = 9;
+			return highCard;
+		}
   }
 }
 
