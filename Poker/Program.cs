@@ -8,13 +8,15 @@ namespace Poker
   {
     static void Main(string[] args)
     {
+			// Create a new deck, print to console
 			Card[] deck = new Card[52];
 			deck = GetDeck();
-			foreach(var card in deck)
-			{
-				Console.WriteLine("Card: " + card.suit + card.rank);
-			}
+			//foreach(var card in deck)
+			//{
+			//	Console.WriteLine("Card: " + card.suit + card.rank);
+			//}
 
+			// Deal a new hand, print to console
 			Card[] dealedHand = DealHand(deck);
 			foreach(var card in dealedHand)
 			{
@@ -22,7 +24,6 @@ namespace Poker
 			}
 
 			// Methods to Create decks and hands (will move to game class later)
-
 			//-------------------------------------------------------------------------
 			// Declare an array of cards and then call a function to fill the array with instances of cards - this section is for testing
 			Card[] hand = GetHand(args);
@@ -83,12 +84,13 @@ namespace Poker
 
 		//-------------------------------------------------------------------------
 		// Methods to generate decks and hands of cards
-		// generate a random deck of cards
+		//-------------------------------------------------------------------------
+		// Generate a randomized (shuffled) deck of cards
 		static Card[] GetDeck()
 		{
 			Card[] deck = new Card[52];
 			char[] suitList = new char[] { 'C', 'D', 'H', 'S' };
-			int k = 0;
+			int suitIndex = 0;
 			for(int i = 0; i < 4; i++)
 			{
 				for (int j = 2; j < 15; j++)
@@ -96,14 +98,14 @@ namespace Poker
 					Card c = new Card();
 					c.rank = j;
 					c.suit = suitList[i];
-					deck[k] = c;
-					k++;
+					deck[suitIndex] = c;
+					suitIndex++;
 				}
 			}
 			return deck;
 		}
 			
-		// get a hand of 5 cards from system args for testing
+		// Get a hand of 5 cards from system args for testing
 		static Card[] GetHand(string[] args)
     {
       Card[] hand = new Card[5];
@@ -118,19 +120,23 @@ namespace Poker
       return hand;
     }
 
-		// have the game create a hand of 5 cards for playing
+		// Have the game create a hand of 5 cards for playing
 		static int dealIndex = 0;
 
 		static Card[] DealHand(Card[] deck)
 		{
+			Random r = new Random();
 			Card[] hand = new Card[5];
 			if (deck == null || dealIndex >= 52) // ran out of cards
 			{
 				deck = GetDeck();
 			}
+			// track the size of the deck for dealing purposes
+			int deckSize = 51 - dealIndex;
 			for(int i = 0; i < 5; i++)
 			{
-				hand[i] = deck[dealIndex];
+				int nextCard = r.Next(0, deckSize);
+				hand[i] = deck[nextCard];
 				dealIndex++;
 			}
 			// Card nextCard = new Card(); -- use this later for replenishing?

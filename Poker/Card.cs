@@ -51,7 +51,7 @@ namespace Poker
         }
       }
 
-			Console.WriteLine("rank: " + rank + " suit: " + suit);
+			//Console.WriteLine("rank: " + rank + " suit: " + suit);
       if (rank == 0)
       {
         Console.WriteLine("Enter a rank: " + str);
