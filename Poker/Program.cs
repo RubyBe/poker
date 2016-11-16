@@ -17,8 +17,8 @@ namespace Poker
 			//}
 
 			// Deal a new hand, print to console
-			Card[] dealedHand = DealHand(deck);
-			foreach(var card in dealedHand)
+			Card[] hand = DealHand(deck);
+			foreach(var card in hand)
 			{
 				Console.WriteLine("Hand: " + card.suit + card.rank);
 			}
@@ -26,7 +26,7 @@ namespace Poker
 			// Methods to Create decks and hands (will move to game class later)
 			//-------------------------------------------------------------------------
 			// Declare an array of cards and then call a function to fill the array with instances of cards - this section is for testing
-			Card[] hand = GetHand(args);
+			// Card[] hand = GetHand(args);
 			// Sort the array of cards to make hand-checking easier for each of the checking helper functions.
 			Array.Sort(hand);
 
@@ -80,6 +80,7 @@ namespace Poker
 				Console.WriteLine("Your high card is: " + highCard);
 				Console.ReadLine();
 			}
+			Console.ReadLine();
     }
 
 		//-------------------------------------------------------------------------
@@ -326,7 +327,14 @@ namespace Poker
 		static int GetHighCard(Card[] hand)
 		{
 			// TODO
-			int highCard = 9;
+			int highCard = hand[0].rank;
+			for(int i = 0; i < 4; i++)
+			{
+				if(hand[i + 1].rank > highCard)
+				{
+					highCard = hand[i + 1].rank;
+				}
+			}
 			return highCard;
 		}
   }
